@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h1>Licytacje na żywo!</h1>
+
+    <h2>Jak to działa?</h2>
+    <section>
+        <p>1. Zaloguj się lub utwórz konto</p>
+        <p>2. Znajdź interesującą Cie licytacje lub stwórz swoją</p>
+        <p>3. Walcz o produkt z innymi użytkownikami!!!</p>
+    </section>
+
+    <div>
+        <b>Liczba aktywnych licytacji w systemie: {{ number_of_auctions }}</b>
+    </div>
+
+    <div>
+        <h3>Zaczynajmy!</h3>
+        <p>Podaj nazwę użytkownika którą chcesz się posługiwać, lub się zaloguj</p>
+        {{ form_start(accountForm, {'action': path('app_login')}) }}
+        <label for="login">Login</label>
+        {{ form_widget(accountForm.login, {'full_name' : 'login'}) }}
+        <label for="login">Hasło</label>
+        {{ form_widget(accountForm.password, {'full_name' : 'password'}) }}
+        <br>
+        <br>
+        {{ form_widget(accountForm.submit) }}
+        {{ form_end(accountForm) }}
+
+        <br>
+        <br>
+        <p>Nie masz konta?</p>
+        <a href="rejestracja" class="btn btn-success">Zarejestruj</a>
+    </div>
+    <footer class="mt-4">
+        Autor: <a href="https://github.com/Sadowskyy">Wiktor Sadowski</a>
+    </footer>
+{% endblock %}

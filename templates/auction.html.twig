@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="card d-flex"
+         style="width: 65vw; margin: 0 auto;">
+
+        <img class="card-img-top w-100"
+             style="height: 60%"
+             src="https://mtb-xc.pl/wp-content/uploads/2013/10/trek-rower-fotografowanie-roweru.jpg">
+        <div class="card-body">
+            <h5 class="card-title">{{ auction.name }}</h5>
+            <p class="card-text">Aktualna cena: {{ auction.price }} zł</p>
+            <a class="btn btn-success"
+               href="{{ path('auction_page', { 'auctionId': auction.id}) }}">Sprawdź aukcje!</a>
+            {% if user == auction.author %}
+                <a class="btn btn-outline-danger"
+                   href="{{ path('delete_auction', { 'auctionId': auction.id}) }}">Usuń aukcje</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <ul class="list-group">
+        <li class="list-group-item active">{{ auction.lastBidd }}</li>
+
+    </ul>
+{% endblock %}

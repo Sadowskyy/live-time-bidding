@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    {% if user is not null %}
+
+    {{ form_start(auctionForm, {'action': path('create_auction')}) }}
+    <label for="login">Nazwa produktu</label>
+    {{ form_widget(auctionForm.name) }}
+    <label for="login">Cena</label>
+    {{ form_widget(auctionForm.price) }}
+    <br>
+    <br>
+    {{ form_widget(auctionForm.submit) }}
+    {{ form_end(auctionForm) }}
+
+    {% endif %}
+
+    {% if user is null %}
+        <p>Nie masz konta?</p>
+        <a href="rejestracja">Zarejestruj się</a>
+        <a href="logowanie">Zaloguj się</a>
+        <br>
+        <br>
+    {% endif %}>
+
+
+    {% for auction in auctions %}
+
+        <div class="card d-flex"
+             style="width: 65vw; margin: 0 auto;"
+        >
+            <img class="card-img-top w-100"
+                 style="height: 60%"
+                 src="https://mtb-xc.pl/wp-content/uploads/2013/10/trek-rower-fotografowanie-roweru.jpg">
+            <div class="card-body">
+                <h5 class="card-title">{{ auction.name }}</h5>
+                <p class="card-text">Aktualna cena: {{ auction.price }} zł</p>
+                <a class="btn btn-success"
+                   href="{{ path('auction_page', { 'auctionId': auction.id}) }}">Sprawdź aukcje!</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
