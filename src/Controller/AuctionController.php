@@ -38,13 +38,19 @@ class AuctionController extends AbstractController
     }
 
     #[Route('/auctions/{auctionId}', name: 'delete_auction')]
-    public function xd(Request $request, string $auctionId): Response
+    public function removeAuction(Request $request, string $auctionId): Response
     {
         $auction = $this->productRepository->find((int)$auctionId);
-//        if ($auction === null)
-//            throw new \Exception();
         $this->auctionService->delete($this->getUser(), $auction);
 
         return new RedirectResponse('/aukcje');
+    }
+
+    #[Route('/auction/{auctionId}', name: 'find_auction')]
+    public function findAuction(Request $request, string $auctionId)
+    {
+        $auction = $this->auctionService->getJsonResponse((int)$auctionId);
+
+        return new JsonResponse($auction);
     }
 }

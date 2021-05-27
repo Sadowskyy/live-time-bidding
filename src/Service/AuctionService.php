@@ -56,4 +56,23 @@ class AuctionService
         $this->entityManager->remove($auction);
         $this->entityManager->flush();
     }
+
+    public function getJsonResponse(int $auctionId): array
+    {
+        $auction = $this->getAuction($auctionId);
+
+        return array(
+            'id' => $auction->getId(),
+            'name' => $auction->getName(),
+            'price' => $auction->getPrice(),
+            'author' => array(
+                'id' => $auction->getAuthor()->getId(),
+                'username' => $auction->getAuthor()->getUsername()
+            ),
+            'isActive' => $auction->getActive(),
+            'bidders' => $auction->getBidders()['username'],
+            'image' => $auction->getImage(),
+            'lastBidd' => $auction->getLastBidd()
+        );
+    }
 }
