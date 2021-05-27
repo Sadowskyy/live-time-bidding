@@ -48,6 +48,12 @@ class SecurityController extends AbstractController
         return new JsonResponse($login);
     }
 
+    #[Route('/users', name: 'get_user_request')]
+    public function findUser(Request $request): JsonResponse
+    {
+        return new JsonResponse($this->getUser());
+    }
+
     #[Route('/logout', name: 'app_logout')]
     public function logout()
     {
