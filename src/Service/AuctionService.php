@@ -9,6 +9,7 @@ use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function Symfony\Component\Translation\t;
 
 class AuctionService
 {
@@ -74,5 +75,26 @@ class AuctionService
             'image' => $auction->getImage(),
             'lastBidd' => $auction->getLastBidd()
         );
+    }
+
+    public function biddAuction(int $auctionId, int $biddOffer, string $username)
+    {
+        $auction = $this->getAuction($auctionId);
+        $user = $this->userRepository->findOneBy(['username' => $username]);
+
+        if (true === empty($auctionId)) {
+            throw new \Exception('Taka aukcja nie istnieje');
+        }
+        if ($auction->getPrice() > $biddOffer || $auction->getAuthor() === $user) {
+            throw new \Exception('Przykro nam ale nie możesz tego zrobić');
+        }
+
+        $auction->setPrice($biddOffer);
+        $auction->setLastBidd($user);
+
+        $this->entityManager->persist($auction);
+        $this->entityManager->flush();
+
+        return $auction;
     }
 }
