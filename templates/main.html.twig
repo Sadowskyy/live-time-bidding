@@ -18,7 +18,7 @@
         <p>Podaj nazwę użytkownika którą chcesz się posługiwać, lub się zaloguj</p>
         {{ form_start(accountForm, {'action': path('app_login')}) }}
         <label for="login">Login</label>
-        {{ form_widget(accountForm.login, {'full_name' : 'login'}) }}
+        {{ form_widget(accountForm.username, {'full_name' : 'username'}) }}
         <label for="login">Hasło</label>
         {{ form_widget(accountForm.password, {'full_name' : 'password'}) }}
         <br>

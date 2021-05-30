@@ -6,6 +6,7 @@ use App\Form\RegisterType;
 use App\Service\AccountService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +14,6 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-
 
 
     public function __construct(
@@ -45,13 +45,18 @@ class SecurityController extends AbstractController
 
         $this->accountService->register($login, $password);
 
-        return new JsonResponse($login);
+        return new RedirectResponse('home');
     }
 
     #[Route('/users', name: 'get_user_request')]
     public function findUser(Request $request): JsonResponse
     {
-        return new JsonResponse($this->getUser());
+        if ($this->getUser() === null) return new JsonResponse();
+
+        return new JsonResponse(array(
+            'username' => $this->getUser()->getUsername(),
+            'roles' => $this->getUser()->getRoles()
+        ));
     }
 
     #[Route('/logout', name: 'app_logout')]
