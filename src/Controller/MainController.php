@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
 use App\Form\AccountType;
-use App\Form\AuctionType;
+
 use App\Form\CreateAuctionType;
+use App\Form\ChangePasswordType;
 use App\Form\RegisterType;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,13 +73,33 @@ class MainController extends AbstractController
     #[Route('/aukcja/{auctionId}', name: 'auction_page')]
     public function findAuction(Request $request, string $auctionId): Response
     {
-        $user = $this->userRepository->findOneBy(['username' => $this->getUser()->getUsername()]);
-        $auction = $this->productRepository->findOneBy((['id' => $auctionId]));
+        $user = $this->getUser();
 
+        if ($user !== null) {
+            $this->userRepository->findOneBy(['username' => $user->getUsername()]);
+        }
+        $auction = $this->productRepository->findOneBy((['id' => $auctionId]));
 
         return $this->render('auction.html.twig', [
             'user' => $user,
             'auction' => $auction
+        ]);
+    }
+
+    #[Route('/konto', name: 'user_page')]
+    public function account(Request $request): Response
+    {
+        $user = $this->getUser();
+
+        $passwordForm = $this->createForm(ChangePasswordType::class);
+        $usernameForm = $this->createForm(ChangeLoginType::class);
+        $passwordForm->handleRequest($request);
+        $usernameForm->handleRequest($request);
+
+        return $this->render('user.html.twig', [
+            'user' => $user,
+            'passwordForm' => $passwordForm->createView(),
+            'usernameForm'=> $usernameForm->createView()
         ]);
     }
 }
