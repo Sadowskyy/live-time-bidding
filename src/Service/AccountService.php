@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class AccountService
 {
@@ -36,6 +37,37 @@ class AccountService
         if ($this->passwordValidator->isValid($password) === true) {
             $user->setPassword($this->encoder->encodePassword($user, $password));
         }
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
+
+    public function changePassword(string $newPassword, UserInterface $user)
+    {
+        $user = $this->getUser($user->getUsername());
+
+        if ($this->passwordValidator->isValid($newPassword) === false) {
+            throw new \Exception('Hasło nie spełnia wymagań');
+        }
+        if ($this->encoder->isPasswordValid($user, $newPassword) === true) {
+            throw new \Exception('Nie możesz użyc tego samego hasła');
+        }
+
+        $user->setPassword($this->encoder->encodePassword($user, $newPassword));
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
+
+    public function changeLogin(string $login, string $password, UserInterface $user)
+    {
+        $user = $this->getUser($user->getUsername());
+
+        if ($login === $user->getUsername() && strlen($login) < 6) {
+            throw new \Exception('Nie możesz zmienić na taki login.');
+        }
+
+        $user->setUsername($login);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

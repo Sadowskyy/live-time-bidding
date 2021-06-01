@@ -1,0 +1,22 @@
+<div>
+    {{ form_start(passwordForm, {'action': path('change_password_request')}) }}
+    <label for="oldPassword">Aktualne hasło</label>
+    {{ form_widget(passwordForm.oldPassword) }}
+    <label for="newPassword">Nowe hasło</label>
+    {{ form_widget(passwordForm.newPassword) }}
+    <br>
+    <br>
+    {{ form_widget(passwordForm.submit) }}
+    {{ form_end(passwordForm) }}
+</div>
+<div>
+    {{ form_start(usernameForm, {'action': path('change_username_request')}) }}
+    <label for="login">Login</label>
+    {{ form_widget(passwordForm.login) }}
+    <label for="password">Hasło</label>
+    {{ form_widget(passwordForm.password) }}
+    <br>
+    <br>
+    {{ form_widget(passwordForm.submit) }}
+    {{ form_end(passwordForm) }}
+</div>

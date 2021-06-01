@@ -79,7 +79,7 @@ class LoginAuthAuthenticator extends AbstractFormLoginAuthenticator implements P
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): RedirectResponse
     {
-        return new RedirectResponse('/home');
+        return new RedirectResponse('/konto');
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
