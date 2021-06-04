@@ -1,5 +1,18 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+    {% if user is not null %}
+        <div>
+            <a href="{{ path('app_logout') }}"
+               style="margin: 0 auto;"
+               id="bidd-offer" class="btn btn-success">Wyloguj
+            </a>
+            <a href="{{ path('user_page') }}"
+                    style="margin: 0 auto;"
+                    id="bidd-offer" class="btn btn-success">Ustawienia
+            </a>
+        </div>
+    {% endif %}
+
     <div class="card d-flex"
          style="width: 65vw; margin: 0 auto;">
 
@@ -21,7 +34,6 @@
                     id="bidd-offer" class="btn btn-success">Podbij cenę
             </button>
             <br>
-
             <input id="bidd-price-btn" type="number"
                    style="width: 20%; margin: 0 auto;"
                    min="">

@@ -1,22 +1,37 @@
-<div>
-    {{ form_start(passwordForm, {'action': path('change_password_request')}) }}
-    <label for="oldPassword">Aktualne hasło</label>
-    {{ form_widget(passwordForm.oldPassword) }}
-    <label for="newPassword">Nowe hasło</label>
-    {{ form_widget(passwordForm.newPassword) }}
-    <br>
-    <br>
-    {{ form_widget(passwordForm.submit) }}
-    {{ form_end(passwordForm) }}
-</div>
-<div>
-    {{ form_start(usernameForm, {'action': path('change_username_request')}) }}
-    <label for="login">Login</label>
-    {{ form_widget(passwordForm.login) }}
-    <label for="password">Hasło</label>
-    {{ form_widget(passwordForm.password) }}
-    <br>
-    <br>
-    {{ form_widget(passwordForm.submit) }}
-    {{ form_end(passwordForm) }}
-</div>
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div>
+          <a href="{{ path('app_logout') }}"
+               style="margin: 0 auto;"
+               id="bidd-offer" class="btn btn-success">Wyloguj
+         </a>
+    <h2>Witaj {{ user.username }}</h2>
+
+    <div>
+        {{ form_start(passwordForm, {'action': path('change_password_request')}) }}
+        <label for="oldPassword">Aktualne hasło</label>
+        {{ form_widget(passwordForm.oldPassword) }}
+        <label for="newPassword">Nowe hasło</label>
+        {{ form_widget(passwordForm.newPassword) }}
+        <br>
+        <br>
+        {{ form_widget(passwordForm.submit) }}
+        {{ form_end(passwordForm) }}
+        <div id="alert" class="alert alert-secondary" style="display: none" role="alert"></div>
+    </div>
+    <div>
+        {{ form_start(usernameForm, {'action': path('change_username_request')}) }}
+        <label for="login">Login</label>
+        {{ form_widget(usernameForm.login) }}
+        <label for="password">Hasło</label>
+        {{ form_widget(usernameForm.password) }}
+        <br>
+        <br>
+        {{ form_widget(usernameForm.submit) }}
+        {{ form_end(usernameForm) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/passwordvalidator.js') }}"></script>
+{% endblock %}

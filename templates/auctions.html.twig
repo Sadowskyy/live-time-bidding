@@ -1,12 +1,23 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-
+    {% if user is not null %}
+        <div>
+            <a href="{{ path('app_logout') }}"
+               style="margin: 0 auto;"
+               id="bidd-offer" class="btn btn-success">Wyloguj
+            </a>
+            <a href="{{ path('user_page') }}"
+                    style="margin: 0 auto;"
+                    id="bidd-offer" class="btn btn-success">Ustawienia
+            </a>
+        </div>
+    {% endif %}
     {% if user is not null %}
 
     {{ form_start(auctionForm, {'action': path('create_auction')}) }}
-    <label for="login">Nazwa produktu</label>
+    <label for="name">Nazwa produktu</label>
     {{ form_widget(auctionForm.name) }}
-    <label for="login">Cena</label>
+    <label for="price">Cena</label>
     {{ form_widget(auctionForm.price) }}
     <br>
     <br>
