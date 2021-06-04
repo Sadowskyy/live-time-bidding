@@ -38,11 +38,6 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="bidders")
-     */
-    private $products;
-
-    /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="lastBidd")
      */
     private $winningAuctions;
@@ -57,6 +52,8 @@ class User implements UserInterface
         $this->products = new ArrayCollection();
         $this->winningAuctions = new ArrayCollection();
         $this->addedAuctions = new ArrayCollection();
+        $this->biddedAuctions = new ArrayCollection();
+        $this->auctionsBidded = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -123,33 +120,6 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    /**
-     * @return Collection|Product[]
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->addBidder($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        if ($this->products->removeElement($product)) {
-            $product->removeBidder($this);
-        }
-
-        return $this;
     }
 
     /**

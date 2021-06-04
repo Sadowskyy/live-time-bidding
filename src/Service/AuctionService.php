@@ -30,14 +30,18 @@ class AuctionService
         return $this->productRepository->findOneBy(['id' => $id]);
     }
 
-    public function create(UserInterface $user, int $price, string $name, $image): Product
+    public function create(UserInterface $user, int $price, string $name): Product
     {
         $user = $this->accountService->getUser($user->getUsername());
         $auction = new Product();
 
         if ($this->auctionValidator->isValid($price, $name) === false) {
-            throw new \Exception('zle cos tam');
+            throw new \Exception('Niestety ale coś się nie zgadza');
         }
+        if ($this->productRepository->findOneBy(['name'=>$name])) {
+            throw new \Exception('Aukcja z taka nazwa już istnieje');
+        }
+
         $auction->setName($name);
         $auction->setPrice($price);
         $auction->setAuthor($user);
@@ -67,7 +71,7 @@ class AuctionService
         return $this->convertToJson($auction);
     }
 
-    public function biddAuction(int $auctionId, int $biddOffer, string $username)
+    public function biddAuction(int $auctionId, int $biddOffer, string $username): array
     {
         $auction = $this->getAuction($auctionId);
         $user = $this->userRepository->findOneBy(['username' => $username]);
@@ -99,7 +103,6 @@ class AuctionService
                 'username' => $auction->getAuthor()->getUsername()
             ),
             'isActive' => $auction->getActive(),
-            'bidders' => $auction->getBidders()['username'],
             'image' => $auction->getImage()
         );
         if ($auction->getLastBidd() === null) {

@@ -17,11 +17,16 @@
 
         {% if user != auction.author and user is not null %}
             <button onclick="biddPrice()"
+                    style="margin: 0 auto;"
                     id="bidd-offer" class="btn btn-success">Podbij cenę
             </button>
+            <br>
+
             <input id="bidd-price-btn" type="number"
                    style="width: 20%; margin: 0 auto;"
-                   min="" max="10000000">
+                   min="">
+            <br>
+            <br>
         {% endif %}
         <div id="bidders">
             {% if auction.lastBidd is null %}

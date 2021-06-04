@@ -20,11 +20,6 @@ class Product
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="products")
-     */
-    private $bidders;
-
-    /**
      * @ORM\Column(type="float")
      */
     private $price;
@@ -55,6 +50,7 @@ class Product
      */
     private $author;
 
+
     public function __construct()
     {
         $this->bidders = new ArrayCollection();
@@ -65,29 +61,6 @@ class Product
         return $this->id;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getBidders(): Collection
-    {
-        return $this->bidders;
-    }
-
-    public function addBidder(User $bidder): self
-    {
-        if (!$this->bidders->contains($bidder)) {
-            $this->bidders[] = $bidder;
-        }
-
-        return $this;
-    }
-
-    public function removeBidder(User $bidder): self
-    {
-        $this->bidders->removeElement($bidder);
-
-        return $this;
-    }
 
     public function getPrice(): ?float
     {
@@ -106,9 +79,9 @@ class Product
         return $this->lastBidd;
     }
 
-    public function setLastBidd(?User $lastBidd): self
+    public function setLastBidd(?User $user): self
     {
-        $this->lastBidd = $lastBidd;
+        $this->lastBidd = $user;
 
         return $this;
     }
