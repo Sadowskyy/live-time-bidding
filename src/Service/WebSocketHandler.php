@@ -39,9 +39,11 @@ class WebSocketHandler implements MessageComponentInterface
 
         $auction = $this->auctionService->biddAuction($data['id'], $data['biddOffer'], $data['username']);
 
-            foreach ($this->clients as $client) {
-                $client->send($msg);
+        foreach ($this->clients as $client) {
+            if ($client === $from) {
+                continue;
             }
+            $client->send(json_encode($auction));
         }
-
+    }
 }

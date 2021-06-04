@@ -16,7 +16,8 @@ class AuctionService
 
     public function __construct(
         private AccountService $accountService,
-        private AuctionValidator $validator,
+        private AuctionValidator $auctionValidator,
+        private FileValidator $fileValidator,
         private ProductRepository $productRepository,
         private UserRepository $userRepository,
         private EntityManagerInterface $entityManager
@@ -29,11 +30,12 @@ class AuctionService
         return $this->productRepository->findOneBy(['id' => $id]);
     }
 
-    public function create(UserInterface $user, int $price, string $name): Product
+    public function create(UserInterface $user, int $price, string $name, $image): Product
     {
         $user = $this->accountService->getUser($user->getUsername());
         $auction = new Product();
-        if ($this->validator->isValid($price, $name) === false) {
+
+        if ($this->auctionValidator->isValid($price, $name) === false) {
             throw new \Exception('zle cos tam');
         }
         $auction->setName($name);
@@ -62,19 +64,7 @@ class AuctionService
     {
         $auction = $this->getAuction($auctionId);
 
-        return array(
-            'id' => $auction->getId(),
-            'name' => $auction->getName(),
-            'price' => $auction->getPrice(),
-            'author' => array(
-                'id' => $auction->getAuthor()->getId(),
-                'username' => $auction->getAuthor()->getUsername()
-            ),
-            'isActive' => $auction->getActive(),
-            'bidders' => $auction->getBidders()['username'],
-            'image' => $auction->getImage(),
-            'lastBidd' => $auction->getLastBidd()
-        );
+        return $this->convertToJson($auction);
     }
 
     public function biddAuction(int $auctionId, int $biddOffer, string $username)
@@ -95,6 +85,36 @@ class AuctionService
         $this->entityManager->persist($auction);
         $this->entityManager->flush();
 
-        return $auction;
+        return $this->convertToJson($auction);
+    }
+
+    private function convertToJson(Product $auction): array
+    {
+        $response = array(
+            'id' => $auction->getId(),
+            'name' => $auction->getName(),
+            'price' => $auction->getPrice(),
+            'author' => array(
+                'id' => $auction->getAuthor()->getId(),
+                'username' => $auction->getAuthor()->getUsername()
+            ),
+            'isActive' => $auction->getActive(),
+            'bidders' => $auction->getBidders()['username'],
+            'image' => $auction->getImage()
+        );
+        if ($auction->getLastBidd() === null) {
+            $lastBidd = array('lastBidd' => array(
+                'id' => null,
+                'username' => null
+            ));
+        } else {
+            $lastBidd = array('lastBidd' => array(
+                'id' => $auction->getLastBidd()->getId(),
+                'username' => $auction->getLastBidd()->getUsername()
+            ));
+        }
+        $response[] = $lastBidd;
+
+        return $response;
     }
 }
