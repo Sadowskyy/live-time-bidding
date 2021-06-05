@@ -10,7 +10,7 @@ class PasswordValidator
 
     public function isValid(string $password): bool
     {
-        if ($password >= self::MIN_LENGTH && $password !== null) {
+        if (strlen($password) >= self::MIN_LENGTH && $password !== null) {
             return true;
         }
         return false;
