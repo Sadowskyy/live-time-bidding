@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\AccountType;
 
+use App\Form\ChangeLoginType;
 use App\Form\CreateAuctionType;
 use App\Form\ChangePasswordType;
 use App\Form\RegisterType;
