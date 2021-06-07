@@ -17,7 +17,6 @@ class AuctionService
     public function __construct(
         private AccountService $accountService,
         private AuctionValidator $auctionValidator,
-        private FileValidator $fileValidator,
         private ProductRepository $productRepository,
         private UserRepository $userRepository,
         private EntityManagerInterface $entityManager
@@ -52,7 +51,7 @@ class AuctionService
         return $auction;
     }
 
-    public function delete(UserInterface $user, Product $auction): void
+    public function delete(UserInterface $user, ?Product $auction): void
     {
         if ($auction === null) {
             throw new \Exception('Taka aukcja nie istnieje');

@@ -42,9 +42,9 @@ class AccountService
         $this->entityManager->flush();
     }
 
-    public function changePassword(string $newPassword, UserInterface $user)
+    public function changePassword(string $newPassword, string $login)
     {
-        $user = $this->getUser($user->getUsername());
+        $user = $this->getUser($login);
 
         if ($this->passwordValidator->isValid($newPassword) === false) {
             throw new \Exception('Hasło nie spełnia wymagań');
@@ -66,7 +66,9 @@ class AccountService
         if ($login === $user->getUsername() && strlen($login) < 6) {
             throw new \Exception('Nie możesz zmienić na taki login.');
         }
-
+        if ($this->encoder->isPasswordValid($user, $password) === false) {
+            throw new \Exception('Nie poprawne hasło.');
+        }
         $user->setUsername($login);
 
         $this->entityManager->persist($user);
