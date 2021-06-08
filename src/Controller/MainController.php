@@ -12,6 +12,7 @@ use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,10 +34,12 @@ class MainController extends AbstractController
     {
         $accountForm = $this->createForm(AccountType::class, null);
         $accountForm->handleRequest($request);
+        $error = $request->query->get('loginError');
 
         return $this->render('main.html.twig', [
             'accountForm' => $accountForm->createView(),
-            'number_of_auctions' => count($this->auctionRepository->findAll())
+            'number_of_auctions' => count($this->auctionRepository->findAll()),
+            'error' => $error
         ]);
     }
 
@@ -62,8 +65,6 @@ class MainController extends AbstractController
 
         $auctions = $this->auctionRepository->findBy(['active' => true]);
 
-        if ($auctions === null)
-            throw new \Exception();
         return $this->render('auctions.html.twig', [
             'user' => $user,
             'auctions' => $auctions,
@@ -92,7 +93,7 @@ class MainController extends AbstractController
     {
         if ($this->getUser() === null) return new RedirectResponse('home?error=Zaloguj się lub stwórz konto');
 
-        $user = $this->userRepository->findOneBy(['username'=> $this->getUser()->getUsername()]);
+        $user = $this->userRepository->findOneBy(['username' => $this->getUser()->getUsername()]);
 
         $passwordForm = $this->createForm(ChangePasswordType::class);
         $usernameForm = $this->createForm(ChangeLoginType::class);
@@ -102,9 +103,9 @@ class MainController extends AbstractController
         return $this->render('user.html.twig', [
             'user' => $user,
             'passwordForm' => $passwordForm->createView(),
-            'usernameForm'=> $usernameForm->createView(),
+            'usernameForm' => $usernameForm->createView(),
             'winningAuctions' => $user->getWinningAuctions(),
-            'addedAuctions'=> $user->getAddedAuctions()
+            'addedAuctions' => $user->getAddedAuctions()
         ]);
     }
 }

@@ -22,3 +22,4 @@ security:
                     - App\Security\LoginAuthAuthenticator
             logout:
                 path: app_logout
+                target: homepage

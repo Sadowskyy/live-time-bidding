@@ -26,6 +26,11 @@
         {{ form_widget(accountForm.submit) }}
         {{ form_end(accountForm) }}
 
+        {% if error is not null %}
+            <div class="alert alert-danger" role="alert">
+                Podałeś zły login lub hasło, spróbuj jeszcze raz.
+            </div>
+        {% endif %}
         <br>
         <br>
         <p>Nie masz konta?</p>

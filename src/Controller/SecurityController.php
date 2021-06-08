@@ -45,30 +45,30 @@ class SecurityController extends AbstractController
 
         $this->accountService->register($login, $password);
 
-        return new RedirectResponse('home');
+        return $this->redirectToRoute('homepage', [], 301);
     }
 
     #[Route('/users/password', name: 'change_password_request')]
-    public function changePassword(Request $request)
+    public function changePassword(Request $request): Response
     {
         $user = $this->getUser();
         $newPassword = $request->get('change_password')['newPassword'];
 
-        $this->accountService->changePassword($newPassword, $user);
+        $this->accountService->changePassword($newPassword, $user->getUsername());
 
-        return new RedirectResponse('konto');
+        return $this->redirectToRoute('user_page', [], 301);
     }
 
-    #[Route('/users/login', name: 'change_password_request')]
-    public function changeLogin(Request $request)
+    #[Route('/users/login', name: 'change_username_request')]
+    public function changeLogin(Request $request): RedirectResponse
     {
         $user = $this->getUser();
-        $login = $request->get('change_password')['login'];
-        $password = $request->get('change_password')['password'];
+        $login = $request->get('change_login')['login'];
+        $password = $request->get('change_login')['password'];
 
         $this->accountService->changeLogin($login, $password, $user);
 
-        return new RedirectResponse('konto');
+        return $this->redirectToRoute('user_page', [], 301);
     }
 
     #[Route('/users', name: 'get_user_request')]
@@ -78,8 +78,8 @@ class SecurityController extends AbstractController
 
         return new JsonResponse(array(
             'username' => $this->getUser()->getUsername(),
-            'roles' => $this->getUser()->getRoles()
-        ));
+            'roles' => $this->getUser()->getRoles(),
+            ));
     }
 
     #[Route('/logout', name: 'app_logout')]

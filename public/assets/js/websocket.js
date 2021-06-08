@@ -12,6 +12,7 @@ websocket.onmessage = function (evt) {
     if (data['id'] === parseInt(auctionId)) {
         let lastBidd = document.getElementById('last-bidd');
         let price = document.getElementById('price');
+        document.getElementById('bidd-price-btn');
 
         price.innerText = 'Cena: ' + data['price'] + 'zł';
         lastBidd.innerText = 'Ostatnia licytacja ' + data['price'] + ' zł: ' + data['0']['lastBidd']['username'];
@@ -61,19 +62,35 @@ window.onload = function () {
 function biddPrice() {
     fetch('http://127.0.0.1:8000/users')
         .then(response => response.json())
-        .then(json => {
-            let message = new Object();
-            let lastBidd = document.getElementById('last-bidd');
-            lastBidd.innerText = 'Ostatnia licytacja ' + document.getElementById('bidd-price-btn').value
-                + ' zł: ' + json['username'];
+        .then(user => {
+            fetch('http://127.0.0.1:8000/auctions/' + auctionId)
+                .then(response => response.json())
+                .then(auction => {
+                    let price = document.getElementById('price');
+                    let button = document.getElementById('bidd-offer');
+                    let message = new Object();
+                    message.id = auctionId
+                    message.biddOffer = document.getElementById('bidd-price-btn').value;
+                    message.username = user['username'];
 
-            message.id = auctionId
-            message.biddOffer = document.getElementById('bidd-price-btn').value;
-            message.username = json['username'];
+                    if (message.biddOffer <= auction['price']) {
+                        throw 'Nie możesz zaproponować takiej samej lub niższej ceny.';
+                    }
+                    if (auction['0']['lastBidd']['username'] === user['username']) {
+                        throw 'Nie możesz przebić swojej własnej oferty.';
+                    }
 
-            websocket.send(JSON.stringify(message));
+                    let lastBidd = document.getElementById('last-bidd');
+                    lastBidd.innerText = 'Ostatnia licytacja ' + document.getElementById('bidd-price-btn').value
+                        + ' zł: ' + user['username'];
+                    price.innerText = 'Cena: ' + message.biddOffer + 'zł';
+                    button.disable = true;
+                    websocket.send(JSON.stringify(message));
+                }).catch(error => {
+                    alert(error)
+                });
         })
         .catch(error => {
-            console.error(error);
+            console.log(error);
         });
 }

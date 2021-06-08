@@ -24,20 +24,20 @@ class AuctionController extends AbstractController
     {
     }
 
-    #[Route('/auctions', name: 'create_auction')]
+    #[Route('/auctions', name: 'create_auction', methods: ['POST'])]
     public function createAuction(Request $request): Response
     {
         $user = $this->getUser();
         $price = $request->get('create_auction')['price'];
         $name = $request->get('create_auction')['name'];
+        $image = $_FILES['create_auction'];
 
-        $auction = $this->auctionService->create($user, $price, $name);
-        $auction = $this->productRepository->find($auction->getId());
+        $auction = $this->auctionService->create($user, $price, $name, $image);
 
         return $this->redirect('aukcja/' . $auction->getId());
     }
 
-    #[Route('/auctions/{auctionId}', name: 'delete_auction')]
+    #[Route('/auctions/{auctionId}', name: 'delete_auction', methods: ['DELETE'])]
     public function removeAuction(Request $request, string $auctionId): Response
     {
         $auction = $this->productRepository->find((int)$auctionId);
@@ -46,7 +46,7 @@ class AuctionController extends AbstractController
         return new RedirectResponse('/aukcje');
     }
 
-    #[Route('/auction/{auctionId}', name: 'find_auction')]
+    #[Route('/auctions/{auctionId}', name: 'find_auction', methods: ['GET'])]
     public function findAuction(Request $request, string $auctionId)
     {
         $auction = $this->auctionService->getJsonResponse((int)$auctionId);

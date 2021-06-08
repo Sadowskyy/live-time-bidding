@@ -17,6 +17,7 @@ class AuctionService
     public function __construct(
         private AccountService $accountService,
         private AuctionValidator $auctionValidator,
+        private FileValidator $fileValidator,
         private ProductRepository $productRepository,
         private UserRepository $userRepository,
         private EntityManagerInterface $entityManager
@@ -29,7 +30,7 @@ class AuctionService
         return $this->productRepository->findOneBy(['id' => $id]);
     }
 
-    public function create(UserInterface $user, int $price, string $name): Product
+    public function create(UserInterface $user, int $price, string $name, array $image): Product
     {
         $user = $this->accountService->getUser($user->getUsername());
         $auction = new Product();
@@ -37,7 +38,7 @@ class AuctionService
         if ($this->auctionValidator->isValid($price, $name) === false) {
             throw new \Exception('Niestety ale coś się nie zgadza');
         }
-        if ($this->productRepository->findOneBy(['name'=>$name])) {
+        if ($this->productRepository->findOneBy(['name' => $name])) {
             throw new \Exception('Aukcja z taka nazwa już istnieje');
         }
 

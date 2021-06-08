@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <div>
-          <a href="{{ path('app_logout') }}"
-               style="margin: 0 auto;"
-               id="bidd-offer" class="btn btn-success">Wyloguj
-         </a>
-            <a href="{{ path('auctions_page') }}"
-               style="margin: 0 auto;"
-               id="bidd-offer" class="btn btn-success">Aukcje
-         </a>
+    <a href="{{ path('app_logout') }}"
+       style="margin: 0 auto;"
+       id="bidd-offer" class="btn btn-success">Wyloguj
+    </a>
+    <a href="{{ path('auctions_page') }}"
+       style="margin: 0 auto;"
+       id="bidd-offer" class="btn btn-success">Aukcje
+    </a>
     <h2>Witaj {{ user.username }}</h2>
 
     <div>

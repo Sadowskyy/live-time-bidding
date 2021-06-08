@@ -84,7 +84,7 @@ class LoginAuthAuthenticator extends AbstractFormLoginAuthenticator implements P
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
     {
-        return new RedirectResponse('/logowanie?loginError=' . 'zły login lub hasło.');
+        return new RedirectResponse('/home?loginError=' . 'zły login lub hasło.');
     }
 
     protected function getLoginUrl(): string
