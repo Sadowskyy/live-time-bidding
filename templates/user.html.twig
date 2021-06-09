@@ -35,34 +35,48 @@
         {{ form_end(usernameForm) }}
     </div>
     <div>
-    <h2>Twoje stworzone aukcje</h2>
-    <div class="list-group" style="max-width: 70vw; margin: 0 auto;">
+        <h2>Twoje stworzone aukcje</h2>
         {% for addedAuction in addedAuctions %}
-      <a href="{{ path('auction_page', { 'auctionId': addedAuction.id}) }}"
-       class="list-group-item list-group-item-action flex-column align-items-start">
-       <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ addedAuction.name }}</h5>
-                  <small>Cena: {{ addedAuction.price }}zł</small>
-              </div>
-             <p class="mb-1">{{ addedAuction.lastBidd.username }}</p>
-            </a>
-         {% endfor %}
+            <div class="card" style="width: 18rem; margin: 0 auto;">
+                <img class="card-img-top" src="{{ asset("images/" ~ addedAuction.image) }}" alt="Zdjęcie produktu">
+                <div class="card-body">
+                    <h5 class="card-title">{{ addedAuction.name }}</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Cena: {{ addedAuction.price }}zł</li>
+                    {% if addedAuction.lastBidd is not null %}
+                        <li class="list-group-item">{{ addedAuction.lastBidd.username }}</li>
+                    {% endif %}
+                </ul>
+                <div class="card-body">
+                    <a href="{{ path('auction_page', { 'auctionId': addedAuction.id}) }}">Zobacz aukcje</a>
+                </div>
+            </div>
+            <br>
+            <br>
+        {% endfor %}
     </div>
-
-    <br>
     <br>
 
     <h2>Aukcje w których prowadzisz</h2>
-    <div class="list-group" style="max-width: 70vw; margin: 0 auto;">
-        {% for winningAuction in winningAuctions %}
-      <a href="{{ path('auction_page', { 'auctionId': winningAuction.id}) }}"
-       class="list-group-item list-group-item-action flex-column align-items-start">
-       <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ winningAuction.name }}</h5>
-                  <small>Cena: {{ winningAuction.price }}zł</small>
-              </div>
-             <p class="mb-1">{{ winningAuction.lastBidd.username }}</p>
-            </a>
-         {% endfor %}
-    </div>
+    {% for winningAuction in winningAuctions %}
+        <div class="card" style="width: 18rem; margin: 0 auto;">
+            <img class="card-img-top" src="{{ asset("images/" ~ winningAuction.image) }}" alt="Zdjęcie produktu">
+            <div class="card-body">
+                <h5 class="card-title">{{ winningAuction.name }}</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Cena: {{ winningAuction.price }}zł</li>
+                {% if winningAuction.lastBidd is not null %}
+                    <li class="list-group-item">{{ winningAuction.lastBidd.username }}</li>
+                {% endif %}
+            </ul>
+            <div class="card-body">
+                <a href="{{ path('auction_page', { 'auctionId': winningAuction.id}) }}">Zobacz aukcje</a>
+            </div>
+        </div>
+        <br>
+        <br>
+    {% endfor %}
+
 {% endblock %}

@@ -6,6 +6,7 @@ use App\Form\AccountType;
 use App\Repository\ProductRepository;
 use App\Service\AuctionService;
 use phpDocumentor\Reflection\Types\This;
+use PHPUnit\Util\Json;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,13 +32,15 @@ class AuctionController extends AbstractController
         $price = $request->get('create_auction')['price'];
         $name = $request->get('create_auction')['name'];
         $image = $_FILES['create_auction'];
+        $uploadDirectory = $this->getParameter('brochures_directory');
 
-        $auction = $this->auctionService->create($user, $price, $name, $image);
+
+        $auction = $this->auctionService->create($user, (int)$price, $name, $image, $uploadDirectory);
 
         return $this->redirect('aukcja/' . $auction->getId());
     }
 
-    #[Route('/auctions/{auctionId}', name: 'delete_auction', methods: ['DELETE'])]
+    #[Route('/auctions/{auctionId}/delete', name: 'delete_auction', methods: ['DELETE'])]
     public function removeAuction(Request $request, string $auctionId): Response
     {
         $auction = $this->productRepository->find((int)$auctionId);

@@ -53,7 +53,6 @@ window.onload = function () {
 
             name.innerText = json['name'];
             price.innerHTML = 'Cena: ' + json['price'] + 'zł';
-            image.src = json['image'];
 
             document.getElementById('bidders').appendChild(biddersList);
         })

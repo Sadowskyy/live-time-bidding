@@ -9,7 +9,6 @@ use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use function Symfony\Component\Translation\t;
 
 class AuctionService
 {
@@ -30,11 +29,17 @@ class AuctionService
         return $this->productRepository->findOneBy(['id' => $id]);
     }
 
-    public function create(UserInterface $user, int $price, string $name, array $image): Product
+    public function create(UserInterface $user, int $price, string $name, array $image, string $uploadDirectory): Product
     {
         $user = $this->accountService->getUser($user->getUsername());
+        $path = basename($image['name']['image']);
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+
         $auction = new Product();
 
+        if ($this->fileValidator->isValid($extension, $path, $uploadDirectory) === false){
+            throw new \Exception('Niestety ale plik o podanej nazwie już istnieje, albo wystapiły inne błedy.');
+        }
         if ($this->auctionValidator->isValid($price, $name) === false) {
             throw new \Exception('Niestety ale coś się nie zgadza');
         }
@@ -45,6 +50,8 @@ class AuctionService
         $auction->setName($name);
         $auction->setPrice($price);
         $auction->setAuthor($user);
+        $auction->setImage($path);
+        move_uploaded_file($image['tmp_name']['image'], $uploadDirectory .$path);
 
         $this->entityManager->persist($auction);
         $this->entityManager->flush();

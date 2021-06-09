@@ -42,7 +42,7 @@
         >
             <img class="card-img-top w-100"
                  style="height: 60%"
-                 src="https://mtb-xc.pl/wp-content/uploads/2013/10/trek-rower-fotografowanie-roweru.jpg">
+                 src="{{ asset("images/" ~ auction.image) }}">
             <div class="card-body">
                 <h5 class="card-title">{{ auction.name }}</h5>
                 <p class="card-text">Aktualna cena: {{ auction.price }} zł</p>

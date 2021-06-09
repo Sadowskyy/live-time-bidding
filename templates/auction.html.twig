@@ -7,8 +7,8 @@
                id="bidd-offer" class="btn btn-success">Wyloguj
             </a>
             <a href="{{ path('user_page') }}"
-                    style="margin: 0 auto;"
-                    id="bidd-offer" class="btn btn-success">Ustawienia
+               style="margin: 0 auto;"
+               id="bidd-offer" class="btn btn-success">Ustawienia
             </a>
         </div>
     {% endif %}
@@ -18,13 +18,14 @@
 
         <img id="image" class="card-img-top w-100"
              style="height: 60%"
-             src="">
+             src="{{ asset("images/" ~ auction.image) }}">
         <div class="card-body">
             <h5 id="name" class="card-title"></h5>
             <p id="price" class="card-text"></p>
             {% if user == auction.author %}
                 <a class="btn btn-outline-danger"
-                   href="{{ path('delete_auction', { 'auctionId': auction.id}) }}">Usuń aukcje</a>
+                   href="{{ path('delete_auction', { 'auctionId': auction.id}) }}"
+                >Usuń aukcje</a>
             {% endif %}
         </div>
 
