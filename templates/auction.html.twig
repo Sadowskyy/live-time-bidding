@@ -43,7 +43,7 @@
         {% endif %}
         <div id="bidders">
             {% if auction.lastBidd is null %}
-                <p>Aktualnie nikt nie licytuje</p>
+                <p id="last-bidd" class="list-group-item active">Aktualnie nikt nie licytuje</p>
             {% endif %}
         </div>
     </div>

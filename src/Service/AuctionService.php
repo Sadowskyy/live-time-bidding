@@ -34,10 +34,10 @@ class AuctionService
         $user = $this->accountService->getUser($user->getUsername());
         $path = basename($image['name']['image']);
         $extension = pathinfo($path, PATHINFO_EXTENSION);
-
+        $size = $image['size']['image'];
         $auction = new Product();
 
-        if ($this->fileValidator->isValid($extension, $path, $uploadDirectory) === false){
+        if ($this->fileValidator->isValid($extension, $size,  $path, $uploadDirectory) === false) {
             throw new \Exception('Niestety ale plik o podanej nazwie już istnieje, albo wystapiły inne błedy.');
         }
         if ($this->auctionValidator->isValid($price, $name) === false) {
@@ -51,7 +51,7 @@ class AuctionService
         $auction->setPrice($price);
         $auction->setAuthor($user);
         $auction->setImage($path);
-        move_uploaded_file($image['tmp_name']['image'], $uploadDirectory .$path);
+        move_uploaded_file($image['tmp_name']['image'], $uploadDirectory . $path);
 
         $this->entityManager->persist($auction);
         $this->entityManager->flush();
@@ -59,7 +59,7 @@ class AuctionService
         return $auction;
     }
 
-    public function delete(UserInterface $user, ?Product $auction): void
+    public function delete(UserInterface $user, ?Product $auction, string $imageDirectory): void
     {
         if ($auction === null) {
             throw new \Exception('Taka aukcja nie istnieje');
@@ -67,6 +67,10 @@ class AuctionService
         if ($auction->getAuthor()->getUsername() !== $user->getUsername()) {
             throw new \Exception('Nie możesz usunąc nie swojej aukcji');
         }
+        if (true === $this->fileValidator->fileExists($imageDirectory, $auction->getImage())) {
+            unlink($imageDirectory . DIRECTORY_SEPARATOR . $auction->getImage());
+        }
+
         $this->entityManager->remove($auction);
         $this->entityManager->flush();
     }

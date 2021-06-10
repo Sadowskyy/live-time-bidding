@@ -34,17 +34,17 @@ class AuctionController extends AbstractController
         $image = $_FILES['create_auction'];
         $uploadDirectory = $this->getParameter('brochures_directory');
 
-
         $auction = $this->auctionService->create($user, (int)$price, $name, $image, $uploadDirectory);
 
         return $this->redirect('aukcja/' . $auction->getId());
     }
 
-    #[Route('/auctions/{auctionId}/delete', name: 'delete_auction', methods: ['DELETE'])]
+    #[Route('/auctions/{auctionId}', name: 'delete_auction', methods: ['DELETE'])]
     public function removeAuction(Request $request, string $auctionId): Response
     {
         $auction = $this->productRepository->find((int)$auctionId);
-        $this->auctionService->delete($this->getUser(), $auction);
+        $imageDirectory = $this->getParameter('brochures_directory');
+        $this->auctionService->delete($this->getUser(), $auction, $imageDirectory);
 
         return new RedirectResponse('/aukcje');
     }
